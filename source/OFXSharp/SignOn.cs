@@ -19,7 +19,15 @@ namespace OFXSharp
         {
             StatusCode = Convert.ToInt32(node.GetValue("//CODE"));
             StatusSeverity = node.GetValue("//SEVERITY");
-            DTServer = node.GetValue("//DTSERVER").ToDate();
+
+            try
+            {
+                DTServer = node.GetValue("//DTSERVER").ToDate();
+            }
+            catch (Exception)
+            {
+                DTServer = new DateTime();
+            }
             Language = node.GetValue("//LANGUAGE");
             IntuBid = node.GetValue("//INTU.BID");
         }
