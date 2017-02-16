@@ -53,7 +53,34 @@ namespace OFXSharp
 
          try
          {
-            Amount = Convert.ToDecimal(node.GetValue(".//TRNAMT"), CultureInfo.InvariantCulture);
+                // Force international pattern
+                string strAmount = node.GetValue(".//TRNAMT");
+                int indexDot = strAmount.IndexOf(".");
+                int indexColon = strAmount.IndexOf(",");
+                
+                // First scenario: it contains both
+                if ((indexDot > 0) && (indexColon > 0))
+                {
+                    // If "dot" comes first, it's Brazilian pattern
+                    if (indexDot < indexColon)
+                    {
+                        strAmount = strAmount.Replace(".", "");
+                        strAmount = strAmount.Replace(",", ".");
+                    }
+                    else
+                    {
+                        // It's OK, it's an international pattern
+                        strAmount = strAmount.Replace(",", "");
+                    }
+                }
+                else if (indexColon > 0)
+                {
+                    // It's a Brazilian pattern, due to the presence of colon, only
+                    strAmount = strAmount.Replace(",", ".");
+                }
+
+                // The other cases we won't treat, because they don't offer trouble
+                Amount = Convert.ToDecimal(strAmount, CultureInfo.InvariantCulture);
          }
          catch (Exception ex)
          {
