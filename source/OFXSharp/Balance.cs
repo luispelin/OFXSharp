@@ -61,7 +61,14 @@ namespace OFXSharp
             AvaliableBalanceDate = avaliableNode.GetValue("//DTASOF").ToDate();
          }
 
-         LedgerBalanceDate = ledgerNode.GetValue("//DTASOF").ToDate();
+         try
+            {
+                LedgerBalanceDate = ledgerNode.GetValue("//DTASOF").ToDate();
+            }
+            catch (Exception)
+            {
+                LedgerBalanceDate = new DateTime();
+            }
       }
    }
 }
